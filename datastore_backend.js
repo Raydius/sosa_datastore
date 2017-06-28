@@ -26,49 +26,61 @@ module.exports = function (coll_name, backend_options) {
     load: function (id, opts, cb) {
       db.get(db.key([coll, id]), function (err, doc) {
         if (err) return cb(err)
-        if (doc) delete doc._id
         cb(null, doc)
       });
     },
+    //OK
     save: function (id, obj, opts, cb) {
-      var tmp_obj = JSON.parse(JSON.stringify(obj))
-      tmp_obj._id = id
-      coll.save(tmp_obj, function (err, result) {
-        var doc = result && result.upserted
-        if (doc) {
-          delete doc._id
-        }
+      var doc = JSON.parse(JSON.stringify(obj))
+      db.save({ key: db.key([coll, id]), data: doc }, function(err) {
         cb(err, doc)
       })
     },
+    //OK
     destroy: function (id, opts, cb) {
-      if (typeof opts.w === 'undefined') opts.w = 1;
       this.load(id, {}, function (err, obj) {
         if (err) return cb(err);
-        if (!obj) return cb(null, null);
-        coll.deleteOne({_id: id}, opts, function (err) {
-          if (err) return cb(err);
-          cb(null, obj);
-        });
+        if (obj) {
+          db.delete(db.key([coll, id]), function(err) {
+            if (err) return cb(err);
+            cb(null, obj);
+          });
+        }
       });
     },
     select: function (opts, cb) {
       if (typeof opts.query === 'undefined') opts.query = {};
-      var cursor = coll.find(opts.query);
-      if (typeof opts.project === 'object') cursor = cursor.project(opts.project);
-      if (typeof opts.comment === 'string') cursor = cursor.comment(opts.comment);
-      if (typeof opts.hint === 'object') cursor = cursor.hint(opts.hint);
+      var cursor = db.createQuery(coll);
+
+/*
+      if (typeof opts.project === 'object') console.log("TODO: cursor.project");
+      if (typeof opts.comment === 'string') console.log("TODO: cursor.comment");
+      if (typeof opts.hint    === 'object') console.log("TODO: cursor.hint");
+
       if (typeof opts.limit === 'number') cursor = cursor.limit(opts.limit);
-      if (typeof opts.skip === 'number') cursor = cursor.skip(opts.skip);
-      if (typeof opts.sort === 'object') cursor = cursor.sort(opts.sort);
-      cursor.toArray(function (err, docs) {
-        if (err) return cb(err)
-        docs = docs.map(function (doc) {
-          delete doc._id
-          return doc
+      if (typeof opts.skip === 'number')  cursor = cursor.offset(opts.skip);
+      if (typeof opts.sort === 'object')  {
+        if (Object.keys(opts.sort).length > 1 ) console.log("TODO: support multiple sort fields");
+        var sortKey = Object.keys(opts.sort)[0];
+        var sortDir = Object.values(opts.sort)[0];
+        var sortDescending = sortDir > 0 ? true : false;
+        cursor = cursor.order(sortKey, {descending: sortDescending});
+      }
+
+      docs = [];
+      cursor.runStream()
+        .on('error', console.error)
+        .on('data', function (entity) {
+          // Access the Key object for this entity.
+          // var key = entity[datastore.KEY];
+          docs.push(entity);
         })
-        cb(null, docs)
-      })
+        .on('info', function(info) {})
+        .on('end', function() {
+          // All entities retrieved.
+        });
+      cb(null, docs);
+*/
     }
   };
 };
