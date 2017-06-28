@@ -44,8 +44,8 @@ var carlos = {id: 'carlos', name: 'los'};
 var brian  = {id: 'brian', name: 'brian'};
 
 humans.save( carlos, null, function(err,doc) {});
-humans.select( {id: carlos.id}, function(err,doc) {});
-humans.destroy( carlos.id );
+humans.select( {query:{id: carlos.id}}, function(err,doc) { console.log(doc) });
+//humans.destroy( carlos.id );
 
 /*
   humans.load('carlos', function (err, human) {

@@ -52,7 +52,6 @@ module.exports = function (coll_name, backend_options) {
       if (typeof opts.query === 'undefined') opts.query = {};
       var cursor = db.createQuery(coll);
 
-/*
       if (typeof opts.project === 'object') console.log("TODO: cursor.project");
       if (typeof opts.comment === 'string') console.log("TODO: cursor.comment");
       if (typeof opts.hint    === 'object') console.log("TODO: cursor.hint");
@@ -67,20 +66,23 @@ module.exports = function (coll_name, backend_options) {
         cursor = cursor.order(sortKey, {descending: sortDescending});
       }
 
-      docs = [];
+      var docs = Array();
       cursor.runStream()
         .on('error', console.error)
         .on('data', function (entity) {
+
           // Access the Key object for this entity.
           // var key = entity[datastore.KEY];
           docs.push(entity);
+console.log(entity);
+console.log(docs);
         })
         .on('info', function(info) {})
         .on('end', function() {
           // All entities retrieved.
         });
+console.log(docs);
       cb(null, docs);
-*/
     }
   };
 };
