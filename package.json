@@ -1,0 +1,17 @@
+{
+  "name": "sosa_datastore",
+  "version": "1.0.2",
+  "description": "Simple Object Storage Abstraction, Google Cloud Datastore version",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "Allen Day <allenday@google.com> (http://cloud.google.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "sosa": "^1.1.1"
+  },
+  "devDependencies": {
+    "@google-cloud/datastore": "^1.0.2"
+  }
+}
