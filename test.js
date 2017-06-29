@@ -74,12 +74,13 @@ var testSave = function(save_obj) {
 
 };
 
+/*
 var testSelect = function(selectObj) {
   return new Promise(function(resolve, reject) {
 
   };
 };
-
+*/
 
 testNull().then(console.log, console.error);
 
