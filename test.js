@@ -40,92 +40,114 @@ var humans = collection('humans', {
   }
 });
 
-var carlos = {id: 'carlos', name: 'los'};
-var brian  = {id: 'brian', name: 'brian'};
+// test null response
+var testNull = return new Promise(function(resolve, reject) {
 
-humans.save( carlos, null, function(err,doc) {
-
-  console.log(doc);
-
-  humans.select( {query:{id: carlos.id}}, function(err,doc) {
-    console.log(doc);
+  humans.load('carlos', function (err, human) {
+    if(err) {
+      assert.ifError(reject(err));
+      reject(err);
+	}
+	else {
+      resolve(JSON.parse(human));
+    }
   });
 
 });
 
-//humans.destroy( carlos.id );
 
-/*
-  humans.load('carlos', function (err, human) {
-    assert.ifError(err);
-    assert.strictEqual(human, null);
-  });
-    humans.select(function (err, results) {
-      assert.ifError(err);
-      assert.deepEqual(results, []);
-      var carlos = {id: 'carlos', name: 'los'};
-      humans.save(carlos, function (err, human) {
+var testSave = function(save_obj) {
+
+  return new Promise(function(resolve, reject) {
+    humans.save(save_obj, function(err, human) {
+      if(err) {
         assert.ifError(err);
-        assert.deepEqual(carlos, human);
-        humans.select(function (err, results) {
-          assert.ifError(err);
-          assert.deepEqual(results, [carlos]);
-          assert.deepEqual(state, {save: 1, afterSave: 1, load: 1});
-          var brian = {id: 'brian', name: 'brian'};
-          humans.save(brian, function (err, human) {
-            assert.ifError(err);
-            assert.deepEqual(brian, human);
-            humans.select(function (err, results) {
-              assert.ifError(err);
-              assert.deepEqual(results, [carlos, brian]);
-              assert.deepEqual(state, {save: 2, afterSave: 2, load: 3});
-              var nick = {id: 'nick', name: 'nick'};
-              humans.save(nick, function (err, human) {
-                assert.ifError(err);
-                assert.deepEqual(nick, human);
-                humans.select(function (err, results) {
-                  assert.ifError(err);
-                  assert.deepEqual(results, [carlos, brian, nick]);
-                  assert.deepEqual(state, {save: 3, afterSave: 3, load: 6});
-                  humans.destroy('brian', function (err, human) {
-                    assert.ifError(err);
-                    assert.deepEqual(brian, human);
-                    assert.deepEqual(state, {save: 3, afterSave: 3, load: 6, destroy: 1});
-                    humans.load('brian', function (err, human) {
-                      assert.ifError(err);
-                      assert.strictEqual(human, null);
-                      humans.select(function (err, results) {
-                        assert.ifError(err);
-                        assert.deepEqual(results, [carlos, nick]);
-                        assert.deepEqual(state, {save: 3, afterSave: 3, load: 8, destroy: 1});
-                        assert.equal(humans.whodat(carlos), 'los');
-                        humans.in('cool_club').select(function (err, results) {
-                          assert.ifError(err);
-                          assert.deepEqual(results, []);
-                          assert.deepEqual(state, {save: 3, afterSave: 3, load: 8, destroy: 1});
-                          humans.in('cool_club').save({id: 'carlos', name: 'los'}, function (err, human) {
-                            assert.ifError(err);
-                            assert.deepEqual(carlos, human);
-                            humans.in('cool_club').select(function (err, results) {
-                              assert.ifError(err);
-                              assert.deepEqual(results, [carlos]);
-                              db.dropDatabase(function (err) {
-                                assert.ifError(err);
-                                console.log('TODO: db.close()');
-                                console.log('passed');
-                              });
-                            });
-                          });
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
+        reject(err);
+      }
+      else {
+        resolve(JSON.parse(human));
+      }
     });
   });
-*/
+
+};
+
+var testSelect = function(selectObj) {
+  return new Promise(function(resolve, reject) {
+
+  };
+};
+/*
+
+
+humans.load('carlos', function (err, human) {
+	//assert.ifError(err);
+	//assert.strictEqual(human, null);
+	humans.select(function (err, results) {
+		assert.ifError(err);
+		assert.deepEqual(results, []);
+		var carlos = {id: 'carlos', name: 'los'};
+		humans.save(carlos, function (err, human) {
+			assert.ifError(err);
+			assert.deepEqual(carlos, human);
+			humans.select(function (err, results) {
+				assert.ifError(err);
+				assert.deepEqual(results, [carlos]);
+				assert.deepEqual(state, {save: 1, afterSave: 1, load: 1});
+				var brian = {id: 'brian', name: 'brian'};
+				humans.save(brian, function (err, human) {
+					assert.ifError(err);
+					assert.deepEqual(brian, human);
+					humans.select(function (err, results) {
+						assert.ifError(err);
+						assert.deepEqual(results, [carlos, brian]);
+						assert.deepEqual(state, {save: 2, afterSave: 2, load: 3});
+						var nick = {id: 'nick', name: 'nick'};
+						humans.save(nick, function (err, human) {
+							assert.ifError(err);
+							assert.deepEqual(nick, human);
+							humans.select(function (err, results) {
+								assert.ifError(err);
+								assert.deepEqual(results, [carlos, brian, nick]);
+								assert.deepEqual(state, {save: 3, afterSave: 3, load: 6});
+								humans.destroy('brian', function (err, human) {
+									assert.ifError(err);
+									assert.deepEqual(brian, human);
+									assert.deepEqual(state, {save: 3, afterSave: 3, load: 6, destroy: 1});
+									humans.load('brian', function (err, human) {
+										assert.ifError(err);
+										assert.strictEqual(human, null);
+										humans.select(function (err, results) {
+											assert.ifError(err);
+											assert.deepEqual(results, [carlos, nick]);
+											assert.deepEqual(state, {save: 3, afterSave: 3, load: 8, destroy: 1});
+											assert.equal(humans.whodat(carlos), 'los');
+											humans.in('cool_club').select(function (err, results) {
+												assert.ifError(err);
+												assert.deepEqual(results, []);
+												assert.deepEqual(state, {save: 3, afterSave: 3, load: 8, destroy: 1});
+												humans.in('cool_club').save({id: 'carlos', name: 'los'}, function (err, human) {
+													assert.ifError(err);
+													assert.deepEqual(carlos, human);
+													humans.in('cool_club').select(function (err, results) {
+														assert.ifError(err);
+														assert.deepEqual(results, [carlos]);
+														db.dropDatabase(function (err) {
+															assert.ifError(err);
+															db.close();
+															console.log('passed');
+														});
+													});
+												});
+											});
+										});
+									});
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+	});
+});*/
