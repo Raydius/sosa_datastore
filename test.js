@@ -43,8 +43,16 @@ var humans = collection('humans', {
 var carlos = {id: 'carlos', name: 'los'};
 var brian  = {id: 'brian', name: 'brian'};
 
-humans.save( carlos, null, function(err,doc) {});
-humans.select( {query:{id: carlos.id}}, function(err,doc) { console.log(doc) });
+humans.save( carlos, null, function(err,doc) {
+
+  console.log(doc);
+
+  humans.select( {query:{id: carlos.id}}, function(err,doc) {
+    console.log(doc);
+  });
+
+});
+
 //humans.destroy( carlos.id );
 
 /*
