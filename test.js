@@ -41,19 +41,21 @@ var humans = collection('humans', {
 });
 
 // test null response
-var testNull = return new Promise(function(resolve, reject) {
+var testNull = function() {
+	return new Promise(function(resolve, reject) {
 
-  humans.load('carlos', function (err, human) {
-    if(err) {
-      assert.ifError(reject(err));
-      reject(err);
-	}
-	else {
-      resolve(JSON.parse(human));
-    }
-  });
+		humans.load('carlos', function (err, human) {
+			if(err) {
+				assert.ifError(reject(err));
+				reject(err);
+			}
+			else {
+				resolve(JSON.parse(human));
+			}
+		});
 
-});
+	});
+};
 
 
 var testSave = function(save_obj) {
@@ -77,6 +79,12 @@ var testSelect = function(selectObj) {
 
   };
 };
+
+
+testNull().then(console.log, console.error);
+
+
+
 /*
 
 
