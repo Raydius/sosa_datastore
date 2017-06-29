@@ -67,7 +67,7 @@ var testSave = function(save_obj) {
         reject(err);
       }
       else {
-        resolve(JSON.parse(human));
+        resolve(human);
       }
     });
   });
@@ -82,7 +82,9 @@ var testSelect = function(selectObj) {
 };
 */
 
-testNull().then(console.log, console.error);
+testNull()
+	.then(testSave({ id: 'carlos', name: 'los' })
+	.then(console.log, console.error);
 
 
 
