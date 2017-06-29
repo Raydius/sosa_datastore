@@ -66,21 +66,23 @@ module.exports = function (coll_name, backend_options) {
         cursor = cursor.order(sortKey, {descending: sortDescending});
       }
 
-      var docs = Array();
+      var docs = [];
+/*
+      db.runQuery(cursor, function(err, entities, info) {
+        docs = entities;
+      });
+*/
+/*
       cursor.runStream()
         .on('error', console.error)
         .on('data', function (entity) {
-
-          // Access the Key object for this entity.
-          // var key = entity[datastore.KEY];
           docs.push(entity);
 console.log(entity);
-console.log(docs);
+//console.log(docs);
         })
-        .on('info', function(info) {})
-        .on('end', function() {
-          // All entities retrieved.
-        });
+        .on('info', function() {})
+        .on('end', function() {});
+*/
 console.log(docs);
       cb(null, docs);
     }
