@@ -67,11 +67,13 @@ module.exports = function (coll_name, backend_options) {
       }
 
       var docs = [];
-/*
+
       db.runQuery(cursor, function(err, entities, info) {
         docs = entities;
+        console.log('docs', docs);
+        cb(null, docs);
       });
-*/
+
 /*
       cursor.runStream()
         .on('error', console.error)
@@ -83,8 +85,8 @@ console.log(entity);
         .on('info', function() {})
         .on('end', function() {});
 */
-console.log(docs);
-      cb(null, docs);
+
+      
     }
   };
 };
