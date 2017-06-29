@@ -82,7 +82,7 @@ var testSelect = function(selectObj) {
 };
 */
 
-testNull().then(console.log, console.error);
+testNull(); //then(console.log, console.error);
 
 
 
