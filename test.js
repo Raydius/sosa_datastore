@@ -50,7 +50,7 @@ var testNull = function() {
 				reject(err);
 			}
 			else {
-				resolve(JSON.parse(human));
+				resolve(human);
 			}
 		});
 
