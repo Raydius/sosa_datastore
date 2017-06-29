@@ -83,7 +83,7 @@ var testSelect = function(selectObj) {
 */
 
 testNull()
-	.then(testSave({ id: 'carlos', name: 'los' })
+	.then(testSave({ id: 'carlos', name: 'los' }))
 	.then(console.log, console.error);
 
 
