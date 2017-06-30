@@ -96,9 +96,7 @@ var carlos = { id: 'carlos', name: 'los' };
 testNull()
 	.then(testSave(carlos))
 	.then(testSelect, console.error)
-	.then(function(results) {
-		assert.deepEqual(state, { save: 1, afterSave: 1, load: 1 });
-	}, console.error);
+	.then(assert.deepEqual(state, { save: 1, afterSave: 1, load: 1 }), console.error);
 
 
 
