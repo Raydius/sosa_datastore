@@ -95,7 +95,7 @@ var testSelect = function(selectObj) {
 var carlos = { id: 'carlos', name: 'los' };
 testNull()
 	.then(testSave(carlos))
-	.then(testSelect, console.error);
+	.then(testSelect, console.error)
 	.then(function(human) {
 		assert.ifError(err);
 		assert.deepEqual(carlos, human);
