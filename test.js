@@ -85,8 +85,8 @@ var testSelect = function(selectObj) {
 				reject(err);
 			}
 
-			assert.deepEqual(results, selectObj);
-
+			assert.deepEqual(results, [selectObj]);
+			resolve(results);
 		});
 
 	});
@@ -97,10 +97,6 @@ testNull()
 	.then(testSave(carlos))
 	.then(testSelect, console.error)
 	.then(function(results) {
-		assert.ifError(err);
-		console.log('results', results);
-		console.log('carlos', [carlos]);
-		assert.deepEqual(results, [carlos]);
 		assert.deepEqual(state, { save: 1, afterSave: 1, load: 1 });
 	}, console.error);
 
