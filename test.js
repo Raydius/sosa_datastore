@@ -98,7 +98,7 @@ testNull()
 	.then(testSelect, console.error)
 	.then(function(human) {
 		assert.ifError(err);
-		assert.deepEqual(carlos, human);
+		assert.deepEqual(human, [carlos]);
 		assert.deepEqual(state, { save: 1, afterSave: 1, load: 1 });
 	}, console.error);
 
