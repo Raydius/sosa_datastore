@@ -49,9 +49,8 @@ var testNull = function() {
 				assert.ifError(reject(err));
 				reject(err);
 			}
-			else {
-				resolve(human);
-			}
+
+			resolve(human);
 		});
 
 	});
@@ -60,31 +59,48 @@ var testNull = function() {
 
 var testSave = function(save_obj) {
 
-  return new Promise(function(resolve, reject) {
-    humans.save(save_obj, function(err, human) {
-      if(err) {
-        assert.ifError(err);
-        reject(err);
-      }
-      else {
-        resolve(human);
-      }
-    });
-  });
+	return new Promise(function(resolve, reject) {
+		humans.save(save_obj, function(err, human) {
+			if(err) {
+				assert.ifError(err);
+				reject(err);
+			}
+
+			assert.deepEqual(save_obj, human);
+			resolve(human);
+
+		});
+	});
 
 };
 
-/*
+
 var testSelect = function(selectObj) {
-  return new Promise(function(resolve, reject) {
+	return new Promise(function(resolve, reject) {
 
-  };
+		humans.select(function (err, results) {
+
+			if(err) {
+				assert.ifError(err);
+				reject(err);
+			}
+
+			assert.deepEqual(results, selectObj);
+
+		});
+
+	});
 };
-*/
 
+var carlos = { id: 'carlos', name: 'los' };
 testNull()
-	.then(testSave({ id: 'carlos', name: 'los' }))
-	.then(console.log, console.error);
+	.then(testSave(carlos))
+	.then(testSelect, console.error);
+	.then(function(human) {
+		assert.ifError(err);
+		assert.deepEqual(carlos, human);
+		assert.deepEqual(state, { save: 1, afterSave: 1, load: 1 });
+	}, console.error);
 
 
 
