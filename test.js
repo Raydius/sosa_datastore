@@ -49,7 +49,7 @@ var testNull = function() {
 				assert.ifError(reject(err));
 				reject(err);
 			}
-
+			console.log('completed testNull');
 			resolve(human);
 		});
 
@@ -67,6 +67,7 @@ var testSave = function(save_obj) {
 			}
 
 			assert.deepEqual(save_obj, human);
+			console.log('completed testSave');
 			resolve(human);
 
 		});
@@ -86,6 +87,7 @@ var testSelect = function(selectObj) {
 			}
 
 			assert.deepEqual(results, [selectObj]);
+			console.log('completed testSelect');
 			resolve(results);
 		});
 
