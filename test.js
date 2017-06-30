@@ -57,16 +57,18 @@ var testNull = function() {
 };
 
 
-var testSave = function(save_obj) {
+var testSave = function(saveObj) {
+
+	console.log('saveObj', saveObj);
 
 	return new Promise(function(resolve, reject) {
-		humans.save(save_obj, function(err, human) {
+		humans.save(saveObj, function(err, human) {
 			if(err) {
 				assert.ifError(err);
 				reject(err);
 			}
 
-			assert.deepEqual(save_obj, human);
+			assert.deepEqual(saveObj, human);
 			console.log('completed testSave');
 			resolve(human);
 
@@ -77,6 +79,9 @@ var testSave = function(save_obj) {
 
 
 var testSelect = function(selectObj) {
+
+	console.log('selectObj', selectObj);
+
 	return new Promise(function(resolve, reject) {
 
 		humans.select(function (err, results) {
