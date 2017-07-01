@@ -112,31 +112,7 @@ var humans = collection('humans', {
   }
 });
 
-// So let's walk through the first test case from the original code:
 
-/*
-   humans.load('carlos', function (err, human) {
-    assert.ifError(err);
-    assert.strictEqual(human, null);
-    humans.select(function (err, results) {
-      assert.ifError(err);
-      assert.deepEqual(results, []);
-      var carlos = {id: 'carlos', name: 'los'};
-      humans.save(carlos, function (err, human) {
-        assert.ifError(err);
-        assert.deepEqual(carlos, human);
-        humans.select(function (err, results) {
-          assert.ifError(err);
-          assert.deepEqual(results, [carlos]);
-          assert.deepEqual(state, {save: 1, afterSave: 1, load: 1});
- */
-
-
-/**
- * So the outermost part of the nest is effectively doing this:
- *
- *
- */
 
 humans.load('carlos', function (err, human) {
 	assert.ifError(err);
