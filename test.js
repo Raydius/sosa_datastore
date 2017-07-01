@@ -1,4 +1,16 @@
+/**
+ * Unit tests for implementation of Google Data Store with codebase carlos8f/sosa_mongo
+ *
+ * Much of the test code here doesn't follow NodeJS and is really poorly documented, but I didn't
+ * want to put too much work into making it function, so I've just added comments for clarification
+ * without changing the architecture too much.  There would definitely be value in refactoring
+ * some of the modular elements.  -Raydius 7/1/2017
+ */
+
+
+// this object uses index.js to instantiate datastore_backend.js
 var sosa_datastore = require('./');
+
 var assert = require('assert');
 
 var state = {};
@@ -15,13 +27,53 @@ var DatastoreClient = require("@google-cloud/datastore")({
 });
 
 var collection_name = 'test_' + Math.random().toString(16).substring(2);
-var collection = sosa_datastore({db: DatastoreClient});
 
 /**
+ * This instantiates sosa (index.js) while using datastore_backend (from datastore_backend.js) and
+ * backend_options = {db: DatastoreClient} as arguments:
+ *
+ * collection = sosa(datastore_backend, backend_options)
+ *
+ * This effectively does this:
+ *
+ * var api = require('sosa/api.js');
+ * var collection = function (coll_name, coll_options) {
+ *
+ *   var store = datastore_backend(coll_name, backend_options);
+ *   var coll = api(store, coll_options);
+ *   coll.in = function() {
+ *   	// do stuff
+ *   	return api(datastore_backend(coll_name, backend_options), options)
+ *   }
+ *
+ *	 return coll;
+ * }
  *
  */
+var collection = sosa_datastore({db: DatastoreClient});
 
 
+/**
+ * So now based on the above, we know that 'humans' is the 'coll_name' and the object is the 'coll_options'
+ * being passed to collection() -- the second piece is the most important because these become added to the
+ * callbacks for same-named methods in the function instantiated by sosa/api.js
+ *
+ * api = function(datastore_backend, options)
+ *
+ * The call below returns an object such that for example:
+ *
+ * var humans = {
+ *   load: function (id, opts, cb) {
+ *   		datastore_backend.load(id, opts, function() {
+ *   			opts.load();
+ *   		}
+ *   	}
+ * }
+ *
+ * Therefore we can see that the below specified method properties are actually passing CALLBACKS to the
+ * same-name methods in datastore_backend, but also injecting the ran() function before executing the
+ * callback (which have to be passed as the cb argument)
+ */
 var humans = collection('humans', {
 
   load: function (obj, opts, cb) {
@@ -115,7 +167,7 @@ testNull()
 	//.catch(console.error);
 
 
-humans.load('carlos').then(humans.select).catch(console.error);
+//humans.load('carlos').then(humans.select).catch(console.error);
 
 /*
 
