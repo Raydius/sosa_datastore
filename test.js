@@ -166,11 +166,11 @@ humans.load('carlos', function (err, human) {
 													humans.in('cool_club').select(function (err, results) {
 														assert.ifError(err);
 														assert.deepEqual(results, [carlos]);
-														db.dropDatabase(function (err) {
+														/*db.dropDatabase(function (err) {
 															assert.ifError(err);
 															db.close();
 															console.log('passed');
-														});
+														});*/
 													});
 												});
 											});
