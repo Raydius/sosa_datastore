@@ -73,7 +73,7 @@ module.exports = function (coll_name, backend_options) {
       }
 
       var docs = [];
-
+      console.log('runQuery', cursor);
       db.runQuery(cursor, function(err, entities, info) {
         docs = entities;
         console.log('docs', docs);
