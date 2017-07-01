@@ -26,6 +26,12 @@ module.exports = function (coll_name, backend_options) {
     load: function (id, opts, cb) {
       db.get(db.key([coll, id]), function (err, doc) {
         if (err) return cb(err)
+
+        // translate undefined to null
+        if(doc === undefined) {
+          doc = null;
+        }
+
         cb(null, doc)
       });
     },
