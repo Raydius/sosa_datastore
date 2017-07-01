@@ -36,7 +36,8 @@ var collection_name = 'test_' + Math.random().toString(16).substring(2);
  *
  * This effectively does this:
  *
- * var api = require('sosa/api.js');
+ * var api = require('sosa/api.js'); // just letting you know where this is coming from
+ *
  * var collection = function (coll_name, coll_options) {
  *
  *   var store = datastore_backend(coll_name, backend_options);
@@ -49,6 +50,7 @@ var collection_name = 'test_' + Math.random().toString(16).substring(2);
  *	 return coll;
  * }
  *
+ * Therefore, collection = api(datastore_backend(coll_name, backend_options), options)
  */
 var collection = sosa_datastore({db: DatastoreClient});
 
@@ -60,19 +62,30 @@ var collection = sosa_datastore({db: DatastoreClient});
  *
  * api = function(datastore_backend, options)
  *
- * The call below returns an object such that for example:
+ * This excerpt shows the data flow:
  *
- * var humans = {
- *   load: function (id, opts, cb) {
- *   		datastore_backend.load(id, opts, function() {
- *   			opts.load();
- *   		}
+ * var humans.load = function(store, options) {
+ *
+ *   // if 'options' is an object that contains options.toId, store it as id
+ * 	 var id = options.toId
+ *
+ * 	 // if 'options' is a function, turn it into the callback function cb
+ * 	 var cb = function()
+ *
+ *   return function (id, opts, cb) { // this method can accept 'opts' or 'cb' depending on data type
+ *   	datastore_backend.load(id, opts, function() {
+ *   		opts.load();
+ *   		cb(); // previously scheduled call-back
  *   	}
+ *   }
  * }
  *
  * Therefore we can see that the below specified method properties are actually passing CALLBACKS to the
  * same-name methods in datastore_backend, but also injecting the ran() function before executing the
  * callback (which have to be passed as the cb argument)
+ *
+ * So basically... DON'T MODIFY THIS PART... it just instantiates collection and injects ran(), and that part
+ * works just fine.  When you run humans.load(), just know that you are actually running:
  */
 var humans = collection('humans', {
 
@@ -99,82 +112,35 @@ var humans = collection('humans', {
   }
 });
 
-// test null response
-var testNull = function() {
-	return new Promise(function(resolve, reject) {
-
-		humans.load('carlos', function (err, human) {
-			if(err) {
-				assert.ifError(reject(err));
-				reject(err);
-			}
-			console.log('completed testNull');
-			resolve(human);
-		});
-
-	});
-};
-
-
-var testSave = function(saveObj) {
-
-	console.log('saveObj', saveObj);
-
-	return new Promise(function(resolve, reject) {
-		humans.save(saveObj, function(err, human) {
-			if(err) {
-				assert.ifError(err);
-				reject(err);
-			}
-
-			assert.deepEqual(saveObj, human);
-			console.log('completed testSave');
-			resolve(human);
-
-		});
-	});
-
-};
-
-
-var testSelect = function(selectObj) {
-
-	console.log('selectObj', selectObj);
-
-	return new Promise(function(resolve, reject) {
-
-		humans.select(function (err, results) {
-
-			if(err) {
-				assert.ifError(err);
-				reject(err);
-			}
-
-			assert.deepEqual(results, [selectObj]);
-			console.log('completed testSelect');
-			resolve(results);
-		});
-
-	});
-};
-
-var carlos = { id: 'carlos', name: 'los' };
-testNull()
-	.then(testSave(carlos), console.error)
-	.then(testSelect)
-	.catch(console.error);
-	//.then(assert.deepEqual(state, { save: 1, afterSave: 1, load: 1 }))
-	//.catch(console.error);
-
-
-//humans.load('carlos').then(humans.select).catch(console.error);
+// So let's walk through the first test case from the original code:
 
 /*
+   humans.load('carlos', function (err, human) {
+    assert.ifError(err);
+    assert.strictEqual(human, null);
+    humans.select(function (err, results) {
+      assert.ifError(err);
+      assert.deepEqual(results, []);
+      var carlos = {id: 'carlos', name: 'los'};
+      humans.save(carlos, function (err, human) {
+        assert.ifError(err);
+        assert.deepEqual(carlos, human);
+        humans.select(function (err, results) {
+          assert.ifError(err);
+          assert.deepEqual(results, [carlos]);
+          assert.deepEqual(state, {save: 1, afterSave: 1, load: 1});
+ */
 
+
+/**
+ * So the outermost part of the nest is effectively doing this:
+ *
+ *
+ */
 
 humans.load('carlos', function (err, human) {
-	//assert.ifError(err);
-	//assert.strictEqual(human, null);
+	assert.ifError(err);
+	assert.strictEqual(human, null);
 	humans.select(function (err, results) {
 		assert.ifError(err);
 		assert.deepEqual(results, []);
@@ -242,4 +208,4 @@ humans.load('carlos', function (err, human) {
 			});
 		});
 	});
-});*/
+});
