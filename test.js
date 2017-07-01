@@ -87,7 +87,7 @@ var collection = sosa_datastore({db: DatastoreClient});
  * So basically... DON'T MODIFY THIS PART... it just instantiates collection and injects ran(), and that part
  * works just fine.  When you run humans.load(), just know that you are actually running:
  */
-var humans = collection('humans', {
+var humans = collection(collection_name, {
 
   load: function (obj, opts, cb) {
     ran('load', obj, opts);
