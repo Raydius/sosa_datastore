@@ -37,9 +37,11 @@ module.exports = function (coll_name, backend_options) {
     },
     //OK
     save: function (id, obj, opts, cb) {
-      var doc = JSON.parse(JSON.stringify(obj))
-      //db.save({ key: db.key([coll, id]), data: doc }, function(err) {
-      db.save({ data: doc }, function(err) {
+
+      var doc = JSON.parse(JSON.stringify(obj));
+      doc.timestamp = datetime.datetime.utcnow();
+
+      db.save({ key: db.key([coll, id]), data: doc }, function(err) {
         cb(err, doc);
       });
     },
