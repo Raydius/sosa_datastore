@@ -38,9 +38,10 @@ module.exports = function (coll_name, backend_options) {
     //OK
     save: function (id, obj, opts, cb) {
       var doc = JSON.parse(JSON.stringify(obj))
-      db.save({ key: db.key([coll, id]), data: doc }, function(err) {
-        cb(err, doc)
-      })
+      //db.save({ key: db.key([coll, id]), data: doc }, function(err) {
+      db.save({ data: doc }, function(err) {
+        cb(err, doc);
+      });
     },
     //OK
     destroy: function (id, opts, cb) {
