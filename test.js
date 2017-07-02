@@ -23,7 +23,7 @@ function ran (method) {
 
 var DatastoreClient = require("@google-cloud/datastore")({
   projectId: 'crypto-bigquery',
-  keyFilename: '../tmp/crypto-bigquery.json'
+  keyFilename: '/home/allenday/crypto-bigquery.json'
 });
 
 //var collection_name = 'test_' + Math.random().toString(16).substring(2);
