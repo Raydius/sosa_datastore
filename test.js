@@ -43,15 +43,18 @@ var collection_name = 'humans';
  *
  *   var store = datastore_backend(coll_name, backend_options);
  *   var coll = api(store, coll_options);
- *   coll.in = function() {
- *   	// do stuff
- *   	return api(datastore_backend(coll_name, backend_options), options)
- *   }
- *
  *	 return coll;
+ *
  * }
  *
  * Therefore, collection = api(datastore_backend(coll_name, backend_options), options)
+ *
+ * ALSO NOTE: at the same time, index also defines another function called 'in' which is functionally very similar
+ * to the normal instantiation, except it specifies a collection -- this just prefixes all of the usual commands
+ *
+ *  coll.in = function() {
+ *   	return api(datastore_backend(coll_name, backend_options), options)
+ *
  */
 var collection = sosa_datastore({db: DatastoreClient});
 
@@ -106,6 +109,14 @@ var humans = collection(collection_name, {
     ran('destroy', obj, opts);
     cb(null, obj);
   },
+
+
+	/**
+	 * One caveat -- this object which is the options argument contains a special property called 'methods'
+	 * which actually appends the child properties as additional methods to sosa/api.js -- this effectively bypasses
+	 * the normal flow, such that now you can run humans.whodat() and it is literally executing options.methods.whodat()
+	 */
+
   methods: {
     whodat: function (obj) {
       return obj.name;
@@ -158,7 +169,11 @@ humans.load('carlos', function (err, human) {
 											assert.ifError(err);
 											assert.deepEqual(results, [carlos, nick]);
 											assert.deepEqual(state, {save: 3, afterSave: 3, load: 8, destroy: 1});
+
+											// test the whodat method defined in the humans object above -- should just return obj.name
 											assert.equal(humans.whodat(carlos), 'los');
+
+
 											humans.in('cool_club').select(function (err, results) {
 												assert.ifError(err);
 												assert.deepEqual(results, []);
