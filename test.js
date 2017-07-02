@@ -26,8 +26,8 @@ var DatastoreClient = require("@google-cloud/datastore")({
   keyFilename: '/home/allenday/crypto-bigquery.json'
 });
 
-//var collection_name = 'test_' + Math.random().toString(16).substring(2);
-var collection_name = 'humans';
+var collection_name = 'test_' + Math.random().toString(16).substring(2);
+//var collection_name = 'humans';
 
 /**
  * This instantiates sosa (index.js) while using datastore_backend (from datastore_backend.js) and
